@@ -156,6 +156,8 @@ export type AgentDefaultsConfig = {
   /** Human-like delay between block replies. */
   humanDelay?: HumanDelayConfig;
   timeoutSeconds?: number;
+  /** Optional network settings (e.g. HTTP/HTTPS proxy for provider API calls). */
+  network?: { proxy?: string };
   /** Max inbound media size in MB for agent-visible attachments (text note or future image attach). */
   mediaMaxMb?: number;
   typingIntervalSeconds?: number;

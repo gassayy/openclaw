@@ -262,6 +262,7 @@ const FIELD_LABELS: Record<string, string> = {
   "agents.defaults.models": "Models",
   "agents.defaults.model.primary": "Primary Model",
   "agents.defaults.model.fallbacks": "Model Fallbacks",
+  "agents.defaults.network.proxy": "Network Proxy",
   "agents.defaults.imageModel.primary": "Image Model",
   "agents.defaults.imageModel.fallbacks": "Image Model Fallbacks",
   "agents.defaults.humanDelay.mode": "Human Delay Mode",
@@ -573,6 +574,8 @@ const FIELD_HELP: Record<string, string> = {
   "agents.defaults.model.primary": "Primary model (provider/model).",
   "agents.defaults.model.fallbacks":
     "Ordered fallback models (provider/model). Used when the primary model fails.",
+  "agents.defaults.network.proxy":
+    "HTTP/HTTPS proxy URL for provider API calls (Anthropic, OpenAI, etc.). Applied for the duration of each embedded agent run.",
   "agents.defaults.imageModel.primary":
     "Optional image model (provider/model) used when the primary model lacks image input.",
   "agents.defaults.imageModel.fallbacks": "Ordered fallback image models (provider/model).",

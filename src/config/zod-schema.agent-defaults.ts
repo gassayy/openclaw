@@ -123,6 +123,13 @@ export const AgentDefaultsSchema = z
     blockStreamingCoalesce: BlockStreamingCoalesceSchema.optional(),
     humanDelay: HumanDelaySchema.optional(),
     timeoutSeconds: z.number().int().positive().optional(),
+    network: z
+      .object({
+        /** HTTP/HTTPS proxy URL for provider API calls (e.g. https://api.anthropic.com). */
+        proxy: z.string().optional(),
+      })
+      .strict()
+      .optional(),
     mediaMaxMb: z.number().positive().optional(),
     typingIntervalSeconds: z.number().int().positive().optional(),
     typingMode: z

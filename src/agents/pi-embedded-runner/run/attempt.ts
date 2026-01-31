@@ -18,6 +18,7 @@ import {
 } from "../../channel-tools.js";
 import { resolveChannelCapabilities } from "../../../config/channel-capabilities.js";
 import { getMachineDisplayName } from "../../../infra/machine-name.js";
+import { makeProxyFetch } from "../../../infra/proxy-fetch.js";
 import { resolveTelegramInlineButtonsScope } from "../../../telegram/inline-buttons.js";
 import { resolveTelegramReactionLevel } from "../../../telegram/reaction-level.js";
 import { resolveSignalReactionLevel } from "../../../signal/reaction-level.js";
@@ -145,6 +146,14 @@ export async function runEmbeddedAttempt(
   const resolvedWorkspace = resolveUserPath(params.workspaceDir);
   const prevCwd = process.cwd();
   const runAbortController = new AbortController();
+
+  // Apply network proxy for provider API calls when configured (affects global fetch for this run).
+  const proxyUrl = params.config?.agents?.defaults?.network?.proxy?.trim();
+  const priorFetch =
+    proxyUrl && proxyUrl.length > 0 ? (globalThis as { fetch: typeof fetch }).fetch : undefined;
+  if (priorFetch !== undefined) {
+    (globalThis as { fetch: typeof fetch }).fetch = makeProxyFetch(proxyUrl!);
+  }
 
   log.debug(
     `embedded run start: runId=${params.runId} sessionId=${params.sessionId} provider=${params.provider} model=${params.modelId} thinking=${params.thinkLevel} messageChannel=${params.messageChannel ?? params.messageProvider ?? "unknown"}`,
@@ -905,6 +914,9 @@ export async function runEmbeddedAttempt(
       await sessionLock.release();
     }
   } finally {
+    if (priorFetch !== undefined) {
+      (globalThis as { fetch: typeof fetch }).fetch = priorFetch;
+    }
     restoreSkillEnv?.();
     process.chdir(prevCwd);
   }
