@@ -489,6 +489,18 @@ export async function monitorDiscordProvider(opts: MonitorDiscordOpts = {}) {
     components.push(createExecApprovalButton({ handler: execApprovalsHandler }));
   }
 
+  // Carbon's GatewayPlugin uses global fetch for gateway/bot; inject proxy so it works behind a proxy.
+  const previousFetch = globalThis.fetch;
+  if (proxyUrl) {
+    globalThis.fetch = makeProxyFetch(proxyUrl);
+  }
+  const restoreFetch = () => {
+    if (proxyUrl) {
+      globalThis.fetch = previousFetch;
+    }
+  };
+  opts.abortSignal?.addEventListener("abort", restoreFetch, { once: true });
+
   const client = new Client(
     {
       baseUrl: "http://localhost",
@@ -660,6 +672,7 @@ export async function monitorDiscordProvider(opts: MonitorDiscordOpts = {}) {
       },
     });
   } finally {
+    restoreFetch();
     stopGatewayLogging();
     if (helloTimeoutId) {
       clearTimeout(helloTimeoutId);
