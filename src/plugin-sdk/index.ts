@@ -223,6 +223,7 @@ export { formatDocsLink } from "../terminal/links.js";
 export type { HookEntry } from "../hooks/types.js";
 export { normalizeE164 } from "../utils.js";
 export { missingTargetError } from "../infra/outbound/target-errors.js";
+export { makeProxyFetch } from "../infra/proxy-fetch.js";
 export { registerLogTransport } from "../logging/logger.js";
 export type { LogTransport, LogTransportRecord } from "../logging/logger.js";
 export {

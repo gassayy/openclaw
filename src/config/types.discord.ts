@@ -106,6 +106,8 @@ export type DiscordAccountConfig = {
   /** If false, do not start this Discord account. Default: true. */
   enabled?: boolean;
   token?: string;
+  /** Proxy URL for Discord API calls (HTTP/SOCKS). Used for application-id resolution and probe; REST uses process default fetch. */
+  proxy?: string;
   /** Allow bot-authored messages to trigger replies (default: false). */
   allowBots?: boolean;
   /**

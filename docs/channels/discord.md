@@ -318,6 +318,7 @@ ack reaction after the bot replies.
 - `historyLimit`: number of recent guild messages to include as context when replying to a mention (default 20; falls back to `messages.groupChat.historyLimit`; `0` disables).
 - `dmHistoryLimit`: DM history limit in user turns. Per-user overrides: `dms["<user_id>"].historyLimit`.
 - `retry`: retry policy for outbound Discord API calls (attempts, minDelayMs, maxDelayMs, jitter).
+- `proxy`: proxy URL for Discord API calls (HTTP/SOCKS). Used for application-id resolution and probe; REST (sending messages, etc.) uses the process default fetch (set `HTTP_PROXY`/`HTTPS_PROXY` in systemd if needed).
 - `actions`: per-action tool gates; omit to allow all (set `false` to disable).
   - `reactions` (covers react + read reactions)
   - `stickers`, `emojiUploads`, `stickerUploads`, `polls`, `permissions`, `messages`, `threads`, `pins`, `search`

@@ -13,6 +13,7 @@ import {
   listDiscordDirectoryGroupsFromConfig,
   listDiscordDirectoryPeersFromConfig,
   looksLikeDiscordTargetId,
+  makeProxyFetch,
   migrateBaseNameToDefaultAccount,
   normalizeAccountId,
   normalizeDiscordMessagingTarget,
@@ -325,10 +326,14 @@ export const discordPlugin: ChannelPlugin<ResolvedDiscordAccount> = {
       probe: snapshot.probe,
       lastProbeAt: snapshot.lastProbeAt ?? null,
     }),
-    probeAccount: async ({ account, timeoutMs }) =>
-      getDiscordRuntime().channel.discord.probeDiscord(account.token, timeoutMs, {
+    probeAccount: async ({ account, timeoutMs }) => {
+      const proxyUrl = account.config.proxy?.trim();
+      const fetcher = proxyUrl ? makeProxyFetch(proxyUrl) : undefined;
+      return getDiscordRuntime().channel.discord.probeDiscord(account.token, timeoutMs, {
         includeApplication: true,
-      }),
+        fetcher,
+      });
+    },
     auditAccount: async ({ account, timeoutMs, cfg }) => {
       const { channelIds, unresolvedChannels } = collectDiscordAuditChannelIds({
         cfg,
@@ -380,10 +385,13 @@ export const discordPlugin: ChannelPlugin<ResolvedDiscordAccount> = {
     startAccount: async (ctx) => {
       const account = ctx.account;
       const token = account.token.trim();
+      const proxyUrl = account.config.proxy?.trim();
+      const proxyFetch = proxyUrl ? makeProxyFetch(proxyUrl) : undefined;
       let discordBotLabel = "";
       try {
         const probe = await getDiscordRuntime().channel.discord.probeDiscord(token, 2500, {
           includeApplication: true,
+          fetcher: proxyFetch,
         });
         const username = probe.ok ? probe.bot?.username?.trim() : null;
         if (username) discordBotLabel = ` (@${username})`;

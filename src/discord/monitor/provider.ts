@@ -16,6 +16,7 @@ import type { OpenClawConfig, ReplyToMode } from "../../config/config.js";
 import { loadConfig } from "../../config/config.js";
 import { danger, logVerbose, shouldLogVerbose, warn } from "../../globals.js";
 import { formatErrorMessage } from "../../infra/errors.js";
+import { makeProxyFetch } from "../../infra/proxy-fetch.js";
 import { createDiscordRetryRunner } from "../../infra/retry-policy.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
 import type { RuntimeEnv } from "../../runtime.js";
@@ -422,7 +423,9 @@ export async function monitorDiscordProvider(opts: MonitorDiscordOpts = {}) {
     );
   }
 
-  const applicationId = await fetchDiscordApplicationId(token, 4000);
+  const proxyUrl = discordCfg.proxy?.trim();
+  const proxyFetch = proxyUrl ? makeProxyFetch(proxyUrl) : undefined;
+  const applicationId = await fetchDiscordApplicationId(token, 4000, proxyFetch);
   if (!applicationId) {
     throw new Error("Failed to resolve Discord application id");
   }

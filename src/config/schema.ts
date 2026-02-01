@@ -332,6 +332,7 @@ const FIELD_LABELS: Record<string, string> = {
   "channels.slack.dm.policy": "Slack DM Policy",
   "channels.slack.allowBots": "Slack Allow Bot Messages",
   "channels.discord.token": "Discord Bot Token",
+  "channels.discord.proxy": "Discord API Proxy",
   "channels.slack.botToken": "Slack Bot Token",
   "channels.slack.appToken": "Slack App Token",
   "channels.slack.userToken": "Slack User Token",
@@ -677,6 +678,8 @@ const FIELD_HELP: Record<string, string> = {
     "Enable the Guild Presences privileged intent. Must also be enabled in the Discord Developer Portal. Allows tracking user activities (e.g. Spotify). Default: false.",
   "channels.discord.intents.guildMembers":
     "Enable the Guild Members privileged intent. Must also be enabled in the Discord Developer Portal. Default: false.",
+  "channels.discord.proxy":
+    "Proxy URL for Discord API calls (HTTP/SOCKS). Used for application-id resolution and probe; REST uses process default fetch.",
   "channels.slack.dm.policy":
     'Direct message access control ("pairing" recommended). "open" requires channels.slack.dm.allowFrom=["*"].',
 };
