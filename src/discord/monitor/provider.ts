@@ -1,6 +1,7 @@
 import { inspect } from "node:util";
 import { Client } from "@buape/carbon";
 import { GatewayIntents, GatewayPlugin } from "@buape/carbon/gateway";
+import { ProxyGatewayPlugin } from "../gateway-proxy.js";
 import { Routes } from "discord-api-types/v10";
 import { resolveTextChunkLimit } from "../../auto-reply/chunk.js";
 import { listNativeCommandSpecsForConfig } from "../../auto-reply/commands-registry.js";
@@ -516,13 +517,25 @@ export async function monitorDiscordProvider(opts: MonitorDiscordOpts = {}) {
       components,
     },
     [
-      new GatewayPlugin({
-        reconnect: {
-          maxAttempts: Number.POSITIVE_INFINITY,
-        },
-        intents: resolveDiscordGatewayIntents(discordCfg.intents),
-        autoInteractions: true,
-      }),
+      proxyUrl
+        ? new ProxyGatewayPlugin(
+            {
+              reconnect: {
+                maxAttempts: Number.POSITIVE_INFINITY,
+              },
+              intents: resolveDiscordGatewayIntents(discordCfg.intents),
+              autoInteractions: true,
+            },
+            undefined,
+            proxyUrl,
+          )
+        : new GatewayPlugin({
+            reconnect: {
+              maxAttempts: Number.POSITIVE_INFINITY,
+            },
+            intents: resolveDiscordGatewayIntents(discordCfg.intents),
+            autoInteractions: true,
+          }),
     ],
   );
 
